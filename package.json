@@ -1,0 +1,28 @@
+{
+  "name": "electron-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "dev": "export DEV=true; gulp serve",
+    "app-debug": "export DEBUG=true; export DEV=true; gulp serve",
+    "build": "electron-packager . Electron-Test --platform=linux --arch=x64 --version=1.0 --ignore=experiments --ignore='node_modules/(electron-packager|electron-prebuilt|standard|publish-release)' --version-string.CompanyName=zz85 --version-string.ProductName=Electron-Test --icon=Icon.icns --out=build --overwrite",
+    "run-linux": "npm run-script build; ./build/Electron-Test-linux-x64/Electron-Test --enable-transparent-visuals"
+  },
+  "author": "Alexandre BRACH",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^1.4.15",
+    "electron-positioner": "^3.0.0",
+    "randomstring": "^1.1.5",
+    "x11": "^2.2.1"
+  },
+  "devDependencies": {
+    "electron-connect": "^0.6.1",
+    "electron-packager": "^8.5.1",
+    "gulp": "^3.9.1",
+    "gulp-jasmine": "^2.4.2",
+    "gulp-sass": "^3.1.0",
+    "jasmine": "^2.5.3"
+  }
+}
