@@ -1,7 +1,6 @@
 'use strict';
 
 var gulp = require('gulp');
-var sass = require('gulp-sass');
 var jasmine = require('gulp-jasmine');
 var cliParams = require('./cli-params.json' )
 
@@ -21,12 +20,6 @@ var callback = function(electronProcState) {
   }
 };
 
-gulp.task('sass', function () {
-    return gulp.src('./sass/**/*.sass')
-        .pipe(sass().on('error', sass.logError))
-        .pipe(gulp.dest('./css'));
-});
-
 gulp.task('jasmine', function() {
     return gulp.src('./tests/**/*.js')
         .pipe( jasmine() );
@@ -39,8 +32,6 @@ gulp.task('reload', function() {
 gulp.task('serve', function () {
 
     electron.start( cliParams, callback );
-
-    gulp.watch('./sass/**/*.sass', ['sass']);
 
     // Restart browser process
     gulp.watch('main.js', electron.restart);

@@ -22,7 +22,6 @@
     "electron-packager": "^8.5.1",
     "gulp": "^3.9.1",
     "gulp-jasmine": "^2.4.2",
-    "gulp-sass": "^3.1.0",
     "jasmine": "^2.5.3"
   }
 }
