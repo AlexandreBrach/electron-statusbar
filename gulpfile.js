@@ -43,7 +43,7 @@ gulp.task('serve', function () {
     gulp.watch('./sass/**/*.sass', ['sass']);
 
     // Restart browser process
-    gulp.watch('main.js', electron.restart);
+    gulp.watch('main.js', function() { electron.restart( cliParams, callback ) } );
 
     // Reload renderer process
     gulp.watch(['./css/**/*.css'], electron.reload);

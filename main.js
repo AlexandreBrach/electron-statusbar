@@ -5,8 +5,6 @@ const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const url = require('url')
 const readline = require('readline');
-const Positioner = require('electron-positioner')
-const winProp = require('./js/window-properties')
 const randomstring = require("randomstring");
 
 if( DEV ) {
@@ -21,7 +19,6 @@ global.cliArgs = cliArgs
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
-let positioner
 
 let windowTitle = 'electronbar' + randomstring.generate( {
     length: 12,
@@ -32,53 +29,55 @@ function createWindow () {
   // Create the browser window.
   //var  {w, h} = electron.screen.getPrimaryDisplay().workAreaSize;
 
+    const winPosition = require('./js/window-position')
 
     mainWindow = new BrowserWindow({
         x: 0,
         y: 0,
-        width: 800, 
         height: 30,
         frame: false,
-        zoomToPageWidth: true,
+        toolbar: false,
+        //zoomToPageWidth: true,
         title: windowTitle,
-        transparent: !DEV,
+        transparent: true,
         type: 'dock',
-        show: false
+        show: false,
+        'web-preferences': {
+            'direct-write': true,
+            'subpixel-font-scaling': true
+        }
     });
 
-    positioner = new Positioner( mainWindow )
-    var p = positioner.calculate( 'topLeft', 'trayRight') 
-    mainWindow.setPosition( p.x, p.y )
-    mainWindow.show()
+    var barPosition = cliArgs.position || 'top';
+    winPosition.computeWinProperties( mainWindow, barPosition ).then( function() {
+        // and load the index.html of the app.
+        mainWindow.loadURL(url.format({
+          pathname: path.join(__dirname, 'index.html'),
+          'node-integration': true,
+          protocol: 'file:',
+          slashes: true
+        }));
 
-    // and load the index.html of the app.
-    mainWindow.loadURL(url.format({
-      pathname: path.join(__dirname, 'index.html'),
-      'node-integration': true,
-      protocol: 'file:',
-      slashes: true
-    }));
+        mainWindow.show()
 
-    // Open the DevTools.
-    if( DEBUG ) {
-        mainWindow.webContents.openDevTools()
-    }
+        // Open the DevTools.
+        if( DEBUG ) {
+            mainWindow.webContents.openDevTools()
+        }
 
-    winProp.getWindowId( windowTitle ).then( function( wid ) {
-        winProp.setStrutValues( wid, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
-    } ).catch( function( err ) {
-      console.log( err );
+
+        // use electron-connect if in DEV mode
+          //if( DEV ) {
+            //client.create(mainWindow, null, function() {
+                //getWindowId( 'mytitle' ).then( function( id ) {
+                  // sidorares : X.ChangeProperty(0, wid, X.atoms.WM_NAME, X.atoms.STRING, 8, 'Hello, NodeJS');
+                //} );
+            
+            //});
+          //}
+    
     });
 
-    // use electron-connect if in DEV mode
-      //if( DEV ) {
-        //client.create(mainWindow, null, function() {
-            //getWindowId( 'mytitle' ).then( function( id ) {
-              // sidorares : X.ChangeProperty(0, wid, X.atoms.WM_NAME, X.atoms.STRING, 8, 'Hello, NodeJS');
-            //} );
-        
-        //});
-      //}
 
     // Emitted when the window is closed.
     mainWindow.on('closed', () => {

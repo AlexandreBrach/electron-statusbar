@@ -1,4 +1,8 @@
 [
-    "--var1=value1",
+    "--css=/home/alex/workspaces/electron-statusbar/examples/custom.css",
+    "--position=bottom",
+    "--var1=valueR",
+    "--enable-transparent-visuals",
+    "--disable-gpu",
     "--var2=value2"
 ]

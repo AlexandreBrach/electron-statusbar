@@ -31,7 +31,7 @@ module.exports = {
     extractDoubleDashParams: function(data) {
         var result = {};
         for( var i=0; i < data.length; i++ ) {
-            var matches = data[i].match( /\-\-([\w\-]+)\=(\w+)/ );
+            var matches = data[i].match( /\-\-([\w\-]+)\=(\S*)/ );
             if( null !== matches ) {
                 result[matches[1]] = matches[2];
             }

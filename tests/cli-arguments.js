@@ -7,6 +7,7 @@ describe("Test cli-argument : cli argument parser", function() {
       var raw = [
           "/path/to/node_modules/electron/dist/electron",
           "--enable-transparent-visuals",
+          "--disable-gpu",
           ".",
           "--musketeers=3",
           "--e=mc2"
