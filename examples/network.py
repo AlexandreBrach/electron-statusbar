@@ -4,22 +4,23 @@
 
 import sys
 import dbus
+import gobject
 
 sys.path.append( '.' )
 
 from DBusProvider.NetworkManager import NetworkManagerService,NetworkInterface
-import gobject
 
 provider = NetworkManagerService()
-devices = provider.getAllHardDevices()
-# devices = []
-# for device in watchedDevices:
-    # devices.append( NetworkInterface( device ))
 
-for device in devices:
-    print "Auto-connect : " + device.Autoconnect
-    print "State : " + device.State
-    print "Interface : " + device.Interface
-    print "Device Type : " + device.DeviceType
-    print "VPN :" + device.ActiveConnection.Vpn
+def printHardDevices( *args ):
+    devices = provider.getAllHardDevices()
 
+    for device in devices:
+        print "============================="
+        print device
+
+provider.onInterfacesChange( printHardDevices )
+
+printHardDevices()
+loop = gobject.MainLoop()
+loop.run()
