@@ -1,8 +1,9 @@
 [
-    "--css=/home/alex/workspaces/electron-statusbar/examples/custom.css",
+    "--css=/home/alex/workspace/electron-statusbar/examples/custom.css",
     "--position=bottom",
     "--var1=valueR",
     "--enable-transparent-visuals",
     "--disable-gpu",
-    "--var2=value2"
+    "--var2=value2",
+    "--dbus=/home/alex/workspace/electron-statusbar/examples/dbus.conf"
 ]

@@ -4,3 +4,4 @@ build
 *.css.map
 *.css
 npm-debug.log
+*.pyc

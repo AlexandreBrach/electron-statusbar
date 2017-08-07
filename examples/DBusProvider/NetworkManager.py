@@ -40,19 +40,14 @@ The device is a bridge interface.
 class NetWorkManagerDBUS:
 
     def __init__(self):
-        # self.loop = DBusGMainLoop()
         dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
-
         self.SERVICE =   'org.freedesktop.NetworkManager'
-        # dbus.set_default_main_loop( self.loop )
         self.bus = dbus.SystemBus()
-        # self.bus = dbus.SystemBus(mainloop=self.loop)
 
     def getDevices(self):
         OBJECT =    '/org/freedesktop/NetworkManager'
         INTERFACE =  'org.freedesktop.NetworkManager'
         proxy = self.bus.get_object( self.SERVICE, OBJECT )
-        # proxy = dbus.SystemBus().get_object( self.SERVICE, OBJECT )
         return proxy.GetAllDevices(dbus_interface=INTERFACE)
 
     def getDevicesProperties( self, deviceName ):
@@ -68,16 +63,11 @@ class NetWorkManagerDBUS:
     def attachNetworkInterfaceChanges( self, callback ):
         print 'attach to signal'
         obj='/org/freedesktop/NetworkManager/Settings'
-        # proxy = self.bus.get_object( self.SERVICE, '/org/freedesktop/NetworkManager/Settings' )
-        # proxy.connect_to_signal( "Test", callback, dbus_interface="org.freedesktop.NetworkManager.Settings" )
         self.bus.add_signal_receiver(callback,
                 signal_name=None,
                 dbus_interface=None,
                 bus_name=None,
                 path=obj)
-        # self.bus.add_signal_receiver(callback,
-                                # interface_keyword='org.freedesktop.NetworkManager.Settings',
-                                # member_keyword='/org/freedesktop/NetworkManager/Settings')
 
 class NetworkManagerService:
 
@@ -101,7 +91,6 @@ class NetworkManagerService:
     def getAllHardDevices( self ):
         devices = self.getAllDevices()
         return self.filterHardDevice( devices )
-        # return self.assembleResult( dbusResult )
 
     def assembleResult( self, dbusResult ):
         devices = []
@@ -132,7 +121,7 @@ class ActiveConnection:
         self.Vpn=str(prop['Vpn'])
         self.Type=str(prop['Type'])
         self.Id=str(prop['Id'])
- 
+
 class NetworkInterface:
 
     def __init__( self, device ):
@@ -166,22 +155,37 @@ class NetworkInterface:
         connection = deviceProperties['ActiveConnection']
 
         if connection != '/':
-            self.ActiveConnection=ActiveConnection( connection ) 
+            self.ActiveConnection=ActiveConnection( connection )
         else:
             self.ActiveConnection=None
 
     def __str__(self):
-        r = []
-        r.append( "State : " + self.State )
-        r.append( "Interface : " + self.Interface )
-        r.append( "Device Type : " + str( self.DeviceType ) )
-        r.append( "Real : " + self.Real )
-        r.append( "Driver : " + self.Driver )
-        r.append( "Udi : " + self.Udi )
+        # r = []
+        # r.append( "State : " + self.State )
+        # r.append( "Interface : " + self.Interface )
+        # r.append( "Device Type : " + str( self.DeviceType ) )
+        # r.append( "Real : " + self.Real )
+        # r.append( "Driver : " + self.Driver )
+        # r.append( "Udi : " + self.Udi )
 
-        if self.ActiveConnection != None:
-            r.append( "Connected :" + self.ActiveConnection.State )
-            r.append( "VPN :" + self.ActiveConnection.Vpn )
-            r.append( "Connection type :" + self.ActiveConnection.Type )
-            r.append( "Connection id :" + self.ActiveConnection.Id )
-        return "\n".join( r )
+        # if self.ActiveConnection != None:
+            # r.append( "Connected :" + self.ActiveConnection.State )
+            # r.append( "VPN :" + self.ActiveConnection.Vpn )
+            # r.append( "Connection type :" + self.ActiveConnection.Type )
+            # r.append( "Connection id :" + self.ActiveConnection.Id )
+        # return "\n".join( r )
+
+        clss = ['network_interface']
+        if 100 == self.State :
+             clss.append( "active" )
+        r = '<'
+        if 1 == self.DeviceType:
+            clss.append( "ethernet" )
+        if 2 == self.DeviceType:
+            clss.append( "wifi" )
+        if 16 == self.DeviceType:
+            clss.append( "vpn" )
+        r = '<div class="' + ' '.join( clss ) + '">'
+        r += self.ActiveConnection.Id
+        r += '</div>'
+        return r

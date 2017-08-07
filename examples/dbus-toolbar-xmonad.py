@@ -2,10 +2,18 @@
 
 # -*- coding: utf-8 -*-
 
-from subprocess import Popen, PIPE, STDOUT
-import fileinput
 import sys
 import dbus
+import dbus.service
+import gobject
+import os
+
+from subprocess import Popen, PIPE, STDOUT
+import fileinput
+
+sys.path.append( '.' )
+
+from DBusProvider.NetworkManager import NetworkManagerService,NetworkInterface
 
 BAR_HEIGHT=40
 XMONAD_BAR_WIDTH=900
@@ -15,6 +23,13 @@ COLOR_HAVINGWINDOW_WORKSPACE="#00DFFC"
 COLOR_URGENT_WORKSPACE="#FF0000"
 COLOR_INACTIVE_WORKSPACE="#4F4F4F"
 COLOR_OTHERSCREEN="#FFFF00"
+
+
+BUS_NAME = 'org.alexandrebrach.toolbar.xmonad'
+OBJECT_PATH = '/org/alexandrebrach/toolbar/xmonad'
+DBUS_INTERFACE = 'org.alexandrebrach.toolbar'
+# OBJECT_PATH = '/org/alexandrebrach/toolbar/network'
+# DBUS_INTERFACE = 'org.alexandrebrach.toolbar.network'
 
 class ppFormater:
 
@@ -121,32 +136,69 @@ class LogHookPP():
     def getWorkspacesNumber( self ):
         return len( self.workspaces )
 
-def getMonitorHeight():
-    proc = Popen('/home/alex/myScripts/screenHeight', stdout=PIPE)
-    tmp = proc.stdout.read()
-    return int(tmp)
+class Debogger:
 
-Y_POS = getMonitorHeight() - BAR_HEIGHT
+    def __init__(self, filename, actif ):
+        self.fd = open( filename, 'a' )
+        self.actif = actif
 
-cmd = [
-    "/home/alex/workspace/electron-statusbar/build/Electron-Test-linux-x64/Electron-Test",
-    "--enable-transparent-visuals",
-    "--disable-gpu",
-    "--css=/home/alex/workspace/electron-statusbar/examples/custom.css",
-]
+    def debug( self, data ):
+        if self.actif:
+            self.fd.write( data + "\n")
+            self.fd.flush()
 
-proc = Popen(cmd, stdin=PIPE)
+class Emitter(dbus.service.Object):
+    def __init__(self, bus_name, object_path):
+        bus = dbus.SessionBus()
+        bus.request_name( bus_name )
+        busName = dbus.service.BusName(bus_name, bus=bus)
+        dbus.service.Object.__init__(self, busName, object_path)
+        self.data = ""
 
-while 1:
+    @dbus.service.signal(dbus_interface=DBUS_INTERFACE, signature='')
+    def changes(self, data):
+        self.data = "<div class='xmonad'>"
+        self.data += data
+        self.data += "</div>"
+        debogger.debug( "---------------------" )
+        debogger.debug( self.data )
+        return True
+
+    @dbus.service.method(dbus_interface=DBUS_INTERFACE,
+                         in_signature='', out_signature='s')
+    def getState(self):
+        return self.data
+
+debogger = Debogger( "/home/alex/dbus_out", False )
+emitter = Emitter( BUS_NAME, OBJECT_PATH )
+
+def job( data, stri ):
+    d = data.readline()
+    debogger.debug( "========================" )
+    debogger.debug( d )
     try:
-        line = sys.stdin.readline()
-    except KeyboardInterrupt:
-        break
-    if not line:
-        break
-    data = line
+        # output = d
+        pp = LogHookPP( d )
+        formater = ppFormater( pp )
+        output = formater.format()
+    except Exception as e:
+        debogger.debug( type(e).__name__ + ':' )
+        debogger.debug( d )
+        return True
+    else:
+        emitter.changes( output )
+        return True
 
-    pp = LogHookPP( data )
-    formater = ppFormater( pp )
-    output = formater.format()
-    proc.stdin.writelines( output + "\n" )
+def end( data, stri):
+    sys.exit( "Terminated.")
+
+def error( data, stri):
+    debogger.debug( data )
+    return True
+
+loop = gobject.MainLoop()
+gobject.io_add_watch(sys.stdin, gobject.IO_IN | gobject.IO_PRI, job)
+gobject.io_add_watch(sys.stdin, gobject.IO_HUP, end)
+gobject.io_add_watch(sys.stdin, gobject.IO_ERR, error)
+gobject.io_add_watch(sys.stdin, gobject.IO_NVAL, job)
+loop.run()

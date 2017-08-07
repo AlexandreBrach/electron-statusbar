@@ -6,6 +6,7 @@ const path = require('path')
 const url = require('url')
 const readline = require('readline');
 const randomstring = require("randomstring");
+const fs = require( 'fs' );
 
 if( DEV ) {
     var client = require('electron-connect').client;
@@ -61,9 +62,7 @@ function createWindow () {
         mainWindow.show()
 
         // Open the DevTools.
-        if( DEBUG ) {
-            mainWindow.webContents.openDevTools()
-        }
+        mainWindow.webContents.openDevTools()
 
 
         // use electron-connect if in DEV mode
@@ -72,10 +71,10 @@ function createWindow () {
                 //getWindowId( 'mytitle' ).then( function( id ) {
                   // sidorares : X.ChangeProperty(0, wid, X.atoms.WM_NAME, X.atoms.STRING, 8, 'Hello, NodeJS');
                 //} );
-            
+
             //});
           //}
-    
+
     });
 
 
@@ -104,7 +103,7 @@ app.on('ready', function() {
 
     rl.on('close', () => {
         app.quit()
-        
+
     });
 
     createWindow()
