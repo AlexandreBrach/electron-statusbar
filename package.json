@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "export DEV=true; gulp serve",
     "app-debug": "export DEBUG=true; export DEV=true; gulp serve",
-    "build": "electron-packager . Electron-Test --platform=linux --arch=x64 --ignore=experiments --ignore='node_modules/(electron-packager|electron-prebuilt|standard|publish-release)' --version-string.CompanyName=zz85 --version-string.ProductName=Electron-Test --icon=Icon.icns --out=build --overwrite",
-    "run-linux": "npm run-script build; ./build/Electron-Test-linux-x64/Electron-Test --enable-transparent-visuals --disable-gpu"
+    "build": "electron-packager . webbar --platform=linux --arch=x64 --ignore=experiments --ignore='node_modules/(electron-packager|electron-prebuilt|standard|publish-release)' --version-string.CompanyName=zz85 --version-string.ProductName=webbar --icon=Icon.icns --out=build --overwrite",
+    "run-linux": "npm run-script build; ./build/webbar-linux-x64/webbar --enable-transparent-visuals --disable-gpu"
   },
   "author": "Alexandre BRACH",
   "license": "ISC",

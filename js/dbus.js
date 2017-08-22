@@ -11,16 +11,16 @@ if (!sessionBus) {
 	throw new Error ('Could not connect to the DBus session bus.')
 }
 
-let dbObject
+var dbObject = []
 
 /**
  * return the state of the service
  *
  * @returns {string}
  */
-var getState = function () {
+var getState = function (iface) {
     return new Promise( function( resolve, reject ) {
-        dbObject.getState( function( err, state ) {
+        iface.getState( function( err, state ) {
             if( err ) {
                 reject( err );
             } else {
@@ -31,14 +31,15 @@ var getState = function () {
 }
 
 /**
- * attach a configuration service to a callback
+ * Attach a configuration service to a callback
+ * The callback will be called a first time after the attachment
  *
  * @param {object} serviceName - the name of the dbus service
  * @param {object} objectName - name of the dbus object
  * @returns {null}
  */
 var attach = function ( serviceName, objectName, callback ) {
-    let service = sessionBus.getService( serviceName );
+    var service = sessionBus.getService( serviceName );
 
     service.getInterface( objectName, INTERFACE, function( e, iface ) {
         if (e || (iface === undefined )) {
@@ -48,13 +49,16 @@ var attach = function ( serviceName, objectName, callback ) {
             process.exit (1)
         }
 
-        dbObject = iface
-
-        dbObject.on( SIGNALNAME, function( data ) {
-            getState().then( function (state ) {
+        iface.on( SIGNALNAME, function( data ) {
+            getState(iface).then( function (state ) {
                 (callback)( state );
             });
         });
+
+        getState(iface).then( function (state ) {
+            (callback)( state );
+        });
+        dbObject.push( iface )
 
     });
 }

@@ -39,7 +39,7 @@ fs.readFile( args.params.css, 'UTF-8', function( err, data ) {
 
 });
 
-let dbusConfig = args.params.dbus
+var dbusConfig = args.params.dbus
 if( dbusConfig ) {
     mode = 'dbus'
 } else {
@@ -63,12 +63,13 @@ if( mode == 'dbus' ) {
                 configs = [configs]
             }
             for( var i=0; i < configs.length; i++ ) {
-                let config = configs[i]
+                var config = configs[i]
                 if( config.css ) {
                     setCss( config.css, config.id );
                 }
+                let id = config.id
                 dbus.attach( config.service, config['object'], function( data ) {
-                    setContent( data, config.id );
+                    setContent( data, id );
                 });
             }
         }

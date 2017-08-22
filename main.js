@@ -49,8 +49,9 @@ function createWindow () {
         }
     });
 
-    var barPosition = cliArgs.position || 'top';
-    winPosition.computeWinProperties( mainWindow, barPosition ).then( function() {
+    var barPosition = cliArgs.params.position || 'top';
+    var screenId = 1251644573022209;
+    winPosition.computeWinProperties( mainWindow, barPosition, screenId ).then( function() {
         // and load the index.html of the app.
         mainWindow.loadURL(url.format({
           pathname: path.join(__dirname, 'index.html'),
@@ -62,7 +63,9 @@ function createWindow () {
         mainWindow.show()
 
         // Open the DevTools.
-        mainWindow.webContents.openDevTools()
+        if( '1' == cliArgs.params.debug ) {
+            mainWindow.webContents.openDevTools()
+        }
 
 
         // use electron-connect if in DEV mode

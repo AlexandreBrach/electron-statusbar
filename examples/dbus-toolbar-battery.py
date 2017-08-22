@@ -11,7 +11,7 @@ sys.path.append( '.' )
 
 from DBusProvider.NetworkManager import NetworkManagerService,NetworkInterface
 
-BUS_NAME = 'org.alexandrebrach.toolbar.network'
+BUS_NAME = 'org.alexandrebrach.toolbar'
 OBJECT_PATH = '/org/alexandrebrach/toolbar/network'
 DBUS_INTERFACE = 'org.alexandrebrach.toolbar'
 

@@ -2,7 +2,9 @@
 const electronScreen = require('electron').screen
 const winProp = require('./window-properties')
 
-function computeWinProperties( w, positionName ) {
+function computeWinProperties( w, positionName, screenId ) {
+    let displays = electronScreen.getAllDisplays()
+    console.log( displays )
     var position = {x:0,y:0};
     let screenSize = electronScreen.getPrimaryDisplay().size
     var [winWidth,winHeight] = w.getSize()
@@ -22,7 +24,7 @@ function computeWinProperties( w, positionName ) {
     }
 
     switch( positionName ) {
-        case 'bottom' : 
+        case 'bottom' :
             position.y = screenSize.height - winHeight;
             winWidth = screenSize.width
             strutValues.bottom = winHeight
@@ -32,7 +34,7 @@ function computeWinProperties( w, positionName ) {
             position.y = 0;
             winWidth = screenSize.width
             strutValues.top = winHeight
-    
+
     }
     w.setPosition( position.x, position.y )
     w.setSize( winWidth, winHeight )
