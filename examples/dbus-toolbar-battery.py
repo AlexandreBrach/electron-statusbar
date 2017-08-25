@@ -9,13 +9,13 @@ import gobject
 
 sys.path.append( '.' )
 
-from DBusProvider.NetworkManager import NetworkManagerService,NetworkInterface
+from DBusProvider.Battery import BatteryService
 
-BUS_NAME = 'org.alexandrebrach.toolbar'
-OBJECT_PATH = '/org/alexandrebrach/toolbar/network'
+BUS_NAME = 'org.alexandrebrach.toolbar.battery'
+OBJECT_PATH = '/org/alexandrebrach/toolbar/battery'
 DBUS_INTERFACE = 'org.alexandrebrach.toolbar'
 
-provider = NetworkManagerService()
+provider = BatteryService()
 
 class Emitter(dbus.service.Object):
     def __init__(self, bus_name, object_path):
@@ -27,13 +27,8 @@ class Emitter(dbus.service.Object):
 
     @dbus.service.signal(dbus_interface=DBUS_INTERFACE, signature='')
     def changes(self, *data):
-        devices = provider.getAllHardDevices()
-        r = "<div class='network_interfaces'>"
-        for device in devices:
-            r += str(device)
-        r += "</div>"
-        self.data = r
-        print r
+        self.data = provider.serializeDevices()
+        print self.data
         return True
 
     @dbus.service.method(dbus_interface=DBUS_INTERFACE,
@@ -43,8 +38,13 @@ class Emitter(dbus.service.Object):
 
 e = Emitter( BUS_NAME, OBJECT_PATH )
 
-provider.onInterfacesChange( e.changes )
+provider.onDeviceChange( e.changes )
 
+def run():
+    e.changes()
+    return True
+
+gobject.timeout_add( 10000, run )
 loop = gobject.MainLoop()
+e.changes()
 loop.run()
-e.changes( data )

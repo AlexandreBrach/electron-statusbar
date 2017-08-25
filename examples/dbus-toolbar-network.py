@@ -27,11 +27,7 @@ class Emitter(dbus.service.Object):
 
     @dbus.service.signal(dbus_interface=DBUS_INTERFACE, signature='')
     def changes(self, *data):
-        devices = provider.getAllHardDevices()
-        r = "<div class='network_interfaces'>"
-        for device in devices:
-            r += str(device)
-        r += "</div>"
+        r = provider.serializeDevices()
         self.data = r
         print r
         return True
@@ -46,5 +42,5 @@ e = Emitter( BUS_NAME, OBJECT_PATH )
 provider.onInterfacesChange( e.changes )
 
 loop = gobject.MainLoop()
+e.changes()
 loop.run()
-e.changes( data )
