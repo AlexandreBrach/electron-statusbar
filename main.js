@@ -38,7 +38,6 @@ function createWindow () {
         height: 30,
         frame: false,
         toolbar: false,
-        //zoomToPageWidth: true,
         title: windowTitle,
         transparent: true,
         type: 'dock',
@@ -50,8 +49,8 @@ function createWindow () {
     });
 
     var barPosition = cliArgs.params.position || 'top';
-    var screenId = 1251644573022209;
-    winPosition.computeWinProperties( mainWindow, barPosition, screenId ).then( function() {
+    var screenNumber = cliArgs.params.screen || 1;
+    winPosition.computeWinProperties( mainWindow, barPosition, screenNumber ).then( function() {
         // and load the index.html of the app.
         mainWindow.loadURL(url.format({
           pathname: path.join(__dirname, 'index.html'),
