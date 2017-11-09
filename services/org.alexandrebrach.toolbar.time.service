@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.alexandrebrach.toolbar.time
+Exec=/usr/bin/dbus-toolbar-time.py
+User=root

@@ -19,6 +19,24 @@ var setContent = function( content, elementId ) {
     element.innerHTML = content;
 }
 
+/**
+ * Apply Css from a file content
+ *
+ * @param string filename - path and name of the file to read
+ * @param string id - id of the element to apply the css on
+ * @returns void
+ */
+var setCssFromFile = function (filename, id) {
+    filename = CONFIGPATH + '/' + filename;
+    fs.readFile( filename, 'UTF-8', function( err, strcss ) {
+        if( err ) {
+            console.error( err );
+        } else {
+            setCss( strcss, id );
+        }
+    } );
+}
+
 var setCss = function( content, id ) {
     var element = document.getElementById( 'css-' + id )
     if( null === element ) {
@@ -109,6 +127,9 @@ if( mode == 'dbus' ) {
             }
             for( var i=0; i < configs.length; i++ ) {
                 var config = configs[i]
+                if( config['css-file'] ) {
+                    setCssFromFile( config['css-file'], config.id );
+                }
                 if( config.css ) {
                     setCss( config.css, config.id );
                 }

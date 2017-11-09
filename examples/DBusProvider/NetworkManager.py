@@ -30,8 +30,15 @@ class NetWorkManagerDBUS:
         return o.GetAll( 'org.freedesktop.NetworkManager.Connection.Active')
 
     def attachNetworkInterfaceChanges( self, callback ):
-        print 'attach to signal'
         obj='/org/freedesktop/NetworkManager/Settings'
+        self.bus.add_signal_receiver(callback,
+                signal_name=None,
+                dbus_interface=None,
+                bus_name=None,
+                path=obj)
+
+    def attachNetworkManagerChanges( self, callback ):
+        obj='/org/freedesktop/NetworkManager'
         self.bus.add_signal_receiver(callback,
                 signal_name=None,
                 dbus_interface=None,
@@ -56,17 +63,6 @@ class NetworkManagerService:
              d.append( str( device ) )
         return '[' + ','.join( d ) + ']'
 
-    # def filterHardDevice( self, devices ):
-        # result = []
-        # for device in devices:
-            # if device.DeviceType in [1,2,16]:
-                # result.append( device )
-        # return result
-
-    # def getAllHardDevices( self ):
-        # devices = self.getAllDevices()
-        # return self.filterHardDevice( devices )
-
     def assembleResult( self, dbusResult ):
         devices = []
         for device in dbusResult:
@@ -74,7 +70,7 @@ class NetworkManagerService:
         return devices
 
     def onInterfacesChange( self, callback ):
-        self.dbus.attachNetworkInterfaceChanges( callback )
+        self.dbus.attachNetworkManagerChanges( callback )
 
 class ActiveConnection:
 

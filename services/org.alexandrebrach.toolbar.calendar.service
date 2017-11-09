@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.alexandrebrach.toolbar.calendar
+Exec=/usr/bin/dbus-toolbar-calendar.py
+User=root
