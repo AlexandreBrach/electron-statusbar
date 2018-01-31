@@ -19,6 +19,13 @@ var setContent = function( content, elementId ) {
     element.innerHTML = content;
 }
 
+var resolveFilename = function ( filename ) {
+    var c = filename.charAt(0)
+    return ( '/' == c )
+        ? filename
+        : CONFIGPATH + '/' + filename;
+}
+
 /**
  * Apply Css from a file content
  *
@@ -27,7 +34,7 @@ var setContent = function( content, elementId ) {
  * @returns void
  */
 var setCssFromFile = function (filename, id) {
-    filename = CONFIGPATH + '/' + filename;
+    var filename = resolveFilename(filename)
     fs.readFile( filename, 'UTF-8', function( err, strcss ) {
         if( err ) {
             console.error( err );
@@ -77,7 +84,7 @@ if( DBUSCONFIG ) {
  */
 var attachEventToTemplate = function (config) {
     let id = config.id
-    let templateFile = CONFIGPATH + '/' + config.template
+    var templateFile = resolveFilename(config.template)
     fs.readFile( templateFile, 'UTF-8', function( err, strtemplate ) {
         if( err ) {
             throw 'Unable to open template file "' + templateFile + '"';

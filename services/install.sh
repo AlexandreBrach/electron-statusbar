@@ -12,6 +12,10 @@ rm /usr/share/dbus-1/services/org.alexandrebrach.toolbar.battery.service
 ln -s $(pwd)/dbus-toolbar-battery.py /usr/bin/dbus-toolbar-battery.py
 ln -s $(pwd)/org.alexandrebrach.toolbar.battery.service /usr/share/dbus-1/services/org.alexandrebrach.toolbar.battery.service
 
+# XMONAD toolbar
+
+# the executable file is daemonized by xmonad, nothing to do here
+
 # Time toolbar
 rm /usr/bin/dbus-toolbar-time.py
 rm /usr/share/dbus-1/services/org.alexandrebrach.toolbar.time.service

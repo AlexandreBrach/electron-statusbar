@@ -1,0 +1,7 @@
+&nbsp;<%= data.month %>
+<% data.days.map( function(day) {
+    var weekend = (1 == day.dayOfWeek) || (7 == day.dayOfWeek) ? 'weekend' : ''; %>
+    <div class="day <%= weekend %>">
+        <%= day.n %>
+    </div>
+<% } ) %>

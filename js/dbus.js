@@ -42,23 +42,28 @@ var attach = function ( serviceName, objectName, callback ) {
     var service = sessionBus.getService( serviceName );
 
     service.getInterface( objectName, INTERFACE, function( e, iface ) {
-        if (e || (iface === undefined )) {
-            console.error ('Failed to request interface \''
-                    + INTERFACE + '\' at \'' + objectName )
-            console.log( e? e : '(no error)' )
-            process.exit (1)
-        }
+        if(e) {
+            console.error(e.join('\n'))
+        } else {
+            //console.log(iface)
+            //if (e || (iface === undefined )) {
+                //console.error ('Failed to request interface \''
+                        //+ INTERFACE + '\' at \'' + objectName )
+                //console.log( e? e : '(no error)' )
+                //process.exit (1)
+            //}
 
-        iface.on( SIGNALNAME, function( data ) {
+            iface.on( SIGNALNAME, function( data ) {
+                getState(iface).then( function (state ) {
+                    (callback)( state );
+                });
+            });
+
             getState(iface).then( function (state ) {
                 (callback)( state );
             });
-        });
-
-        getState(iface).then( function (state ) {
-            (callback)( state );
-        });
-        dbObject.push( iface )
+            dbObject.push( iface )
+        }
 
     });
 }

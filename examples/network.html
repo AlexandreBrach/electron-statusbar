@@ -3,35 +3,34 @@
     'NM_DEVICE_TYPE_ETHERNET',
     'NM_DEVICE_TYPE_VPN'
     ];
-    data.map( function(device) { %>
-    <% if( managed.indexOf( device.deviceType ) != -1 ) { %>
-        <%
-            var c;
-            switch( device.state ) {
-                case 'NM_DEVICE_STATE_PREPARE' :
-                    c = 'stage1';
-                    break;
-                case 'NM_DEVICE_STATE_CONFIG' :
-                    c = 'stage2';
-                    break;
-                case 'NM_DEVICE_STATE_IP_CONFIG' :
-                    c = 'stage3';
-                    break;
-                case 'NM_DEVICE_STATE_IP_CHECK' :
-                    c = 'stage4';
-                    break;
-                case 'NM_DEVICE_STATE_ACTIVATED' :
-                    c = 'active';
-                    break;
-                default:
-                    c = 'notDisplayed'
-            }
-            var lbl = '';
-            if( ['NM_DEVICE_TYPE_WIFI','NM_DEVICE_TYPE_VPN'].indexOf( device.deviceType ) != -1 ) {
-                lbl = device.activeConnection.id;
-            }
-        %>
-        <div class="network_interface <%= device.deviceType %> <%= c %>">
-            <%= lbl %>
-        </div>
+    data.map( function(device) {
+    if( managed.indexOf( device.deviceType ) != -1 ) {
+        var c;
+        switch( device.state ) {
+            case 'NM_DEVICE_STATE_PREPARE' :
+                c = 'stage1';
+                break;
+            case 'NM_DEVICE_STATE_CONFIG' :
+                c = 'stage2';
+                break;
+            case 'NM_DEVICE_STATE_IP_CONFIG' :
+                c = 'stage3';
+                break;
+            case 'NM_DEVICE_STATE_IP_CHECK' :
+                c = 'stage4';
+                break;
+            case 'NM_DEVICE_STATE_ACTIVATED' :
+                c = 'active';
+                break;
+            default:
+                c = 'notDisplayed'
+        }
+        var lbl = '';
+        if( ['NM_DEVICE_TYPE_WIFI','NM_DEVICE_TYPE_VPN'].indexOf( device.deviceType ) != -1 ) {
+            lbl = device.activeConnection !== undefined ? device.activeConnection.id : "";
+        }
+    %>
+    <div class="network_interface <%= device.deviceType %> <%= c %>">
+        <%= lbl %>
+    </div>
 <% } } ) %>

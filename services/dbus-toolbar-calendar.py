@@ -5,9 +5,10 @@
 import dbus
 import dbus.service
 import gobject
-import time
+from datetime import date,datetime,timedelta
 
 from dbus.mainloop.glib import DBusGMainLoop
+
 DBusGMainLoop(set_as_default=True)
 
 BUS_NAME = 'org.alexandrebrach.toolbar.calendar'
@@ -20,15 +21,39 @@ class Emitter(dbus.service.Object):
         bus.request_name( bus_name )
         busName = dbus.service.BusName(bus_name, bus=bus)
         dbus.service.Object.__init__(self, busName, object_path)
-        self.data = self._get_time()
+        self.monthName=('janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre')
+        self.data = self._serializeResult(self._getDays())
+        self.month=None
 
-    def _get_time(self):
-        t=time.localtime()
-        return '{"time":"' + str(t.tm_hour) + ':' + str(t.tm_min) + '"}'
+    def _getDays(self):
+        """
+        Return informations about the 8 next days
+        """
+        week = [datetime.now()]
+        dayDelta = timedelta(1)
+
+        d_of_w = week[0].isoweekday()%7
+        days = [(week[0].day,d_of_w+1)]
+        self.month=self.monthName[week[0].month-1]
+
+        for i in xrange(1,8):
+            week.append(week[i-1]+dayDelta)
+            days.append((week[i].day,((d_of_w+i)%7+1)))
+
+        return days
+
+    def _serializeResult(self, days):
+        table_result = []
+        for d in days:
+            table_result.append( '{"n":'+str(d[0])+',"dayOfWeek":'+str(d[1])+'}')
+        return "["+",".join(table_result)+"]"
+
 
     @dbus.service.signal(dbus_interface=DBUS_INTERFACE, signature='')
     def changes(self, *data):
-        self.data = self._get_time()
+        days = self._getDays()
+        self.data = '{"month":"'+self.month+'","days":'+self._serializeResult(days)+'}'
+        print self.data
         return True
 
     @dbus.service.method(dbus_interface=DBUS_INTERFACE,
@@ -42,7 +67,7 @@ def run():
     e.changes()
     return True
 
-gobject.timeout_add( 30000, run )
+gobject.timeout_add( 60000, run )
 loop = gobject.MainLoop()
 e.changes()
 loop.run()

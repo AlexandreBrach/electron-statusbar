@@ -32,6 +32,8 @@ function createWindow () {
 
     const winPosition = require('./js/window-position')
 
+    console.log('window creation...');
+
     mainWindow = new BrowserWindow({
         x: 0,
         y: 0,
@@ -50,14 +52,17 @@ function createWindow () {
 
     var barPosition = cliArgs.params.position || 'top';
     var screenNumber = cliArgs.params.screen || 1;
+    console.log('Computing window properties...');
     winPosition.computeWinProperties( mainWindow, barPosition, screenNumber ).then( function() {
-        // and load the index.html of the app.
-        mainWindow.loadURL(url.format({
+        var pageUrl = url.format({
           pathname: path.join(__dirname, 'index.html'),
           'node-integration': true,
           protocol: 'file:',
           slashes: true
-        }));
+        });
+        console.log( 'Load url ' + pageUrl + '...');
+        // and load the index.html of the app.
+        console.log(mainWindow.loadURL( pageUrl ) );
 
         mainWindow.show()
 
@@ -65,18 +70,6 @@ function createWindow () {
         if( '1' == cliArgs.params.debug ) {
             mainWindow.webContents.openDevTools()
         }
-
-
-        // use electron-connect if in DEV mode
-          //if( DEV ) {
-            //client.create(mainWindow, null, function() {
-                //getWindowId( 'mytitle' ).then( function( id ) {
-                  // sidorares : X.ChangeProperty(0, wid, X.atoms.WM_NAME, X.atoms.STRING, 8, 'Hello, NodeJS');
-                //} );
-
-            //});
-          //}
-
     });
 
 
@@ -93,6 +86,7 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function() {
+    console.log( 'Initializing application...');
     var rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
