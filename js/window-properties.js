@@ -5,7 +5,7 @@ var X;
 
 /**
 * Return the window name using its id
-* 
+*
 * @param {integer} wid - window id
 * @returns {Promise}
 */
@@ -16,8 +16,13 @@ var getWindowName = function( wid ) {
         X.GetProperty(0, wid, wmNameAtom, utf8Atom, 0, 10000000, function(err, nameProp) {
           if( err ) {
             reject( err );
+              return
           }
-          resolve( nameProp.data.toString() );
+          if( nameProp == undefined ) {
+            reject( "unknown window " + wid );
+          } else {
+              resolve( nameProp.data.toString() );
+          }
         });
       });
     });
@@ -26,12 +31,12 @@ var getWindowName = function( wid ) {
 
 /**
 * Return the id of the named window
-* 
-* @param {string} name - window name 
+*
+* @param {string} name - window name
 * @returns {Promise}
 */
 var getWindowId = function (name) {
-  
+
   return new Promise( function( resolve, reject ) {
       x11.createClient(function( err, display ) {
         X = display.client;
@@ -44,7 +49,7 @@ var getWindowId = function (name) {
                     }
                 })
             } );
-        }) 
+        })
       });
   });
 }
@@ -67,8 +72,8 @@ var getWindowId = function (name) {
 *       bottom_start_x: 0
 *       bottom_end_x : 0
 *   }
-* 
-* @param {integer} wid - window ID 
+*
+* @param {integer} wid - window ID
 * @param {object} strutValue - strut values
 * @returns {Promise}
 */

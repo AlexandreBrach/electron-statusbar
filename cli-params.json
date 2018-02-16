@@ -4,6 +4,6 @@
     "--screen=2",
     "--enable-transparent-visuals",
     "--disable-gpu",
-    "--debug=0",
+    "--debugmode=1",
     "--dbus=/home/alex/workspace/electron-statusbar/examples/dbus.conf"
 ]

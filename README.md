@@ -2,4 +2,8 @@
 
 A web-based desktop status bar created with Electron.
 
-WIP, works with xMonad.
+# PREREQUIS
+
+Dbus lib for python
+
+    apt install python-dbus-dev

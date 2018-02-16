@@ -14,13 +14,13 @@
   "dependencies": {
     "dbus-native": "^0.2.1",
     "ejs": "^2.5.7",
-    "electron": "^1.4.15",
-    "electron-positioner": "^3.0.0",
+    "electron": "~1.7.8",
+    "electron-positioner": "latest",
     "randomstring": "^1.1.5",
+    "electron-connect": "^0.6.1",
     "x11": "^2.2.1"
   },
   "devDependencies": {
-    "electron-connect": "^0.6.1",
     "electron-packager": "^8.5.1",
     "electron-rebuild": "^1.6.0",
     "gulp": "^3.9.1",

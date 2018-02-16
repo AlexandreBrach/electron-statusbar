@@ -5,13 +5,14 @@ var sass = require('gulp-sass');
 var jasmine = require('gulp-jasmine');
 var cliParams = require('./cli-params.json' )
 
-var electron = require('electron-connect').server.create( 
+var electron = require('electron-connect').server.create(
     {
         stopOnClose: true
     }
 );
 
 electron.on( 'error', function( error ) {
+    console.log( "GULP Error")
     console.log( error );
 });
 

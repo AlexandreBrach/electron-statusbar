@@ -62,13 +62,14 @@ function createWindow () {
         });
         console.log( 'Load url ' + pageUrl + '...');
         // and load the index.html of the app.
-        console.log(mainWindow.loadURL( pageUrl ) );
+        mainWindow.loadURL( pageUrl );
 
         mainWindow.show()
 
         // Open the DevTools.
-        if( '1' == cliArgs.params.debug ) {
-            mainWindow.webContents.openDevTools()
+        if( '1' == cliArgs.params.debugmode ) {
+            console.log("Now in debug mode")
+            mainWindow.webContents.openDevTools({mode:"detach"})
         }
     });
 
