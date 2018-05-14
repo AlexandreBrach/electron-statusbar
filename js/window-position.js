@@ -2,6 +2,18 @@
 const electronScreen = require('electron').screen
 const winProp = require('./window-properties')
 
+var debugmode = false
+
+function setDebug( mode ) {
+    debugmode = mode
+}
+
+function debug( str ) {
+    if( debugmode ) {
+        console.log( str );
+    }
+}
+
 function computeWinProperties( w, positionName, screenNumber ) {
     let displays = electronScreen.getAllDisplays()
     var position = {x:0,y:0};
@@ -31,8 +43,11 @@ function computeWinProperties( w, positionName, screenNumber ) {
         screenIndex = 0;
     }
 
+    debug( "Draw on screen : " + screenIndex )
+
     let display = displays[screenIndex];
     let screenSize = display.size;
+    debug( "Screen size : " + JSON.stringify( screenSize ) )
     let screenX = display.bounds.x;
     let screenY = display.bounds.y;
 
@@ -55,11 +70,14 @@ function computeWinProperties( w, positionName, screenNumber ) {
             strutValues.top_end_x = position.x + winWidth;
 
     }
+    debug( "Calculated position : " + position.x + "x" + position.y )
+    debug( "Calculated size : " + winWidth + "x" + winHeight )
     w.setPosition( position.x, position.y )
     w.setSize( winWidth, winHeight )
 
     return new Promise( function( resolve, reject ) {
         winProp.getWindowId( w.getTitle() ).then( function( wid ) {
+            debug( "setting the following strutValues : " + JSON.stringify( strutValues ) )
             winProp.setStrutValues( wid, strutValues )
             resolve( true );
         } ).catch( function( err ) {
@@ -70,5 +88,6 @@ function computeWinProperties( w, positionName, screenNumber ) {
 }
 
 module.exports = {
-    computeWinProperties : computeWinProperties
+    computeWinProperties : computeWinProperties,
+    setDebug : setDebug
 }

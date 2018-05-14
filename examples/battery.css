@@ -1,0 +1,50 @@
+
+@keyframes jaugeContent-blinker {
+  50% { background-color: yellow; }
+}
+
+@keyframes jauge-blinker {
+  50% { background-color: #990000; }
+}
+
+#battery {
+    float: right;
+    margin: 3px 10px;
+}
+
+#battery .jauge {
+    width: 100px;
+    border: 1px solid white;
+    height: 5px;
+    padding: 3px;
+    background-color: #333333;
+    border-radius: 3px;
+    box-shadow: 2px 2px 2px black;
+}
+
+#battery .jauge div {
+    height: 5px;
+}
+
+#battery .jauge.Discharging div {
+    background: #0066aa;
+}
+
+#battery .jauge.Charging div {
+    background: #00aa66;
+}
+
+#battery .jauge.Fullycharged div {
+    background: #00ff66;
+}
+
+#battery .jauge.low.Discharging {
+    background-color: yellow;
+    animation: jauge-blinker 1s linear infinite;
+}
+
+#battery .jauge.low.Discharging div {
+    background: red;
+    height: 5px;
+    animation: jaugeContent-blinker 1s linear infinite;
+}

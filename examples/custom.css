@@ -1,0 +1,12 @@
+
+@font-face {
+    font-family: 'DejaVu';
+    font-style: normal;
+    src: url('/home/alex/.local/share/fonts/DejaVu Sans Mono Bold for Powerline Nerd Font Complete.ttf');
+}
+
+body {
+    color: white !important;
+    font-family: DejaVu;
+    text-shadow: 2px 2px 2px black;
+}

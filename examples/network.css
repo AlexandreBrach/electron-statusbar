@@ -1,0 +1,28 @@
+#network {
+    float:right;
+    padding : 0px 10px;
+}
+
+#network .network_interface {
+    float:right;
+    padding : 0px 10px;
+}
+
+#network .network_interface.NM_DEVICE_TYPE_WIFI:before {
+    content:"\f1eb";
+}
+
+#network .network_interface.NM_DEVICE_TYPE_VPN:before {
+    content:"\f023";
+}
+
+#network .network_interface.NM_DEVICE_TYPE_ETHERNET:before {
+    content:"\f1e6";
+}
+
+#network .network_interface.stage1:before { color:black }
+#network .network_interface.stage1:before { color:grey }
+#network .network_interface.stage1:before { color:orange }
+#network .network_interface.stage1:before { color:yellow }
+#network .network_interface.active:before { color:green }
+#network .network_interface.notDisplayed { display:none }

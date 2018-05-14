@@ -1,0 +1,8 @@
+#time {
+    float:right;
+}
+
+#time:before {
+    content:"\f017";
+    padding-right: 10px;
+}

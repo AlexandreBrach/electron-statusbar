@@ -1,7 +1,7 @@
 <% data.map( function(device) { %>
     <% if( 'Line Power' != device.type ) { %>
-    <div class="jauge <%= device.state.replace( ' ', '' ) %>">
-        <div class="left<%= device.percentage < 10 ? ' low' : '' %>" style="width:<%= device.percentage %>px">
+    <div class="jauge <%= device.state.replace( ' ', '' ) %> <%= device.percentage < 10 ? ' low' : '' %>">
+        <div class="left" style="width:<%= device.percentage %>px">
         </div>
     </div>
     <% } %>

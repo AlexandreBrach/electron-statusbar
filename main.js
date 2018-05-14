@@ -1,7 +1,7 @@
 let DEBUG = process.env.DEBUG
 let DEV = process.env.DEV
 
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, protocol} = require('electron')
 const path = require('path')
 const url = require('url')
 const readline = require('readline');
@@ -17,6 +17,17 @@ var cliArgs = require( './js/cli-arguments.js' )
 cliArgs.init( process.argv )
 global.cliArgs = cliArgs
 
+var debugmode = false
+if( '1' == cliArgs.params.debugmode ) {
+    debugmode = true
+}
+
+function debug( str ) {
+    if( debugmode ) {
+        console.log( str );
+    }
+}
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
@@ -31,6 +42,7 @@ function createWindow () {
   //var  {w, h} = electron.screen.getPrimaryDisplay().workAreaSize;
 
     const winPosition = require('./js/window-position')
+    winPosition.setDebug( debugmode )
 
     console.log('window creation...');
 
@@ -52,7 +64,6 @@ function createWindow () {
 
     var barPosition = cliArgs.params.position || 'top';
     var screenNumber = cliArgs.params.screen || 1;
-    console.log('Computing window properties...');
     winPosition.computeWinProperties( mainWindow, barPosition, screenNumber ).then( function() {
         var pageUrl = url.format({
           pathname: path.join(__dirname, 'index.html'),
@@ -67,8 +78,9 @@ function createWindow () {
         mainWindow.show()
 
         // Open the DevTools.
-        if( '1' == cliArgs.params.debugmode ) {
-            console.log("Now in debug mode")
+        //if( '1' == cliArgs.params.debugmode ) {
+        if( debugmode ) {
+            console.log("open the chrome console")
             mainWindow.webContents.openDevTools({mode:"detach"})
         }
     });
@@ -86,6 +98,7 @@ function createWindow () {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
+app.disableHardwareAcceleration()
 app.on('ready', function() {
     console.log( 'Initializing application...');
     var rl = readline.createInterface({
@@ -103,7 +116,9 @@ app.on('ready', function() {
 
     });
 
-    createWindow()
+    protocol.unregisterProtocol('', () => {
+        createWindow()
+    })
 } );
 
 // Quit when all windows are closed.
