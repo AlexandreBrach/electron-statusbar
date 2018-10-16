@@ -75,7 +75,7 @@ function createWindow () {
         // and load the index.html of the app.
         mainWindow.loadURL( pageUrl );
 
-        mainWindow.show()
+        mainWindow.show();
 
         // Open the DevTools.
         //if( '1' == cliArgs.params.debugmode ) {
@@ -117,7 +117,10 @@ app.on('ready', function() {
     });
 
     protocol.unregisterProtocol('', () => {
-        createWindow()
+        setTimeout( function(){
+            createWindow()
+        }, 100);
+
     })
 } );
 
