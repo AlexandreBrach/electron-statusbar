@@ -16,7 +16,9 @@ Dbus lib for python
 
 Some services need the following package (Debian) :
 
-    upower (battery)
+    apt-get install upower
+
+    pacman -S upower
 
 
 run :

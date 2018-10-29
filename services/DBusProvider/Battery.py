@@ -25,7 +25,7 @@ class BatteryDBUS:
         return o.GetAll( 'org.freedesktop.UPower.Device' )
 
     def attachDeviceChanges( self, callback ):
-        print 'attach to device changes'
+        print('attach to device changes')
         OBJECT =  '/org/freedesktop/UPower'
         self.bus.add_signal_receiver(callback,
                 signal_name=None,
@@ -234,5 +234,5 @@ class BatteryService:
 if __name__ == "__main__":
 
     service = BatteryService()
-    print service.serializeDevices()
+    print(service.serializeDevices())
 

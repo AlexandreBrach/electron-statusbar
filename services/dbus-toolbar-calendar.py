@@ -4,10 +4,11 @@
 
 import dbus
 import dbus.service
-import gobject
 from datetime import date,datetime,timedelta
+import time
 
 from dbus.mainloop.glib import DBusGMainLoop
+from multiprocessing import Process
 
 DBusGMainLoop(set_as_default=True)
 
@@ -36,7 +37,7 @@ class Emitter(dbus.service.Object):
         days = [(week[0].day,d_of_w+1)]
         self.month=self.monthName[week[0].month-1]
 
-        for i in xrange(1,8):
+        for i in range(1,8):
             week.append(week[i-1]+dayDelta)
             days.append((week[i].day,((d_of_w+i)%7+1)))
 
@@ -53,7 +54,7 @@ class Emitter(dbus.service.Object):
     def changes(self, *data):
         days = self._getDays()
         self.data = '{"month":"'+self.month+'","days":'+self._serializeResult(days)+'}'
-        print self.data
+        print(self.data)
         return True
 
     @dbus.service.method(dbus_interface=DBUS_INTERFACE,
@@ -67,7 +68,14 @@ def run():
     e.changes()
     return True
 
-gobject.timeout_add( 60000, run )
-loop = gobject.MainLoop()
-e.changes()
-loop.run()
+while True:
+    action_process = Process(target=run)
+    action_process.start()
+    action_process.join()
+    action_process.terminate()
+    time.sleep(10)
+
+# gobject.timeout_add( 60000, run )
+# loop = gobject.MainLoop()
+# e.changes()
+# loop.run()

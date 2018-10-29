@@ -5,7 +5,9 @@
 import sys
 import dbus
 import dbus.service
-import gobject
+import time
+
+from multiprocessing import Process
 
 sys.path.append( '.' )
 
@@ -28,7 +30,7 @@ class Emitter(dbus.service.Object):
     @dbus.service.signal(dbus_interface=DBUS_INTERFACE, signature='')
     def changes(self, *data):
         self.data = provider.serializeDevices()
-        print self.data
+        print(self.data)
         return True
 
     @dbus.service.method(dbus_interface=DBUS_INTERFACE,
@@ -44,7 +46,11 @@ def run():
     e.changes()
     return True
 
-gobject.timeout_add( 10000, run )
-loop = gobject.MainLoop()
-e.changes()
-loop.run()
+
+while True:
+    action_process = Process(target=run)
+    action_process.start()
+    action_process.join()
+    action_process.terminate()
+    time.sleep(10)
+
