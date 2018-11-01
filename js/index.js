@@ -9,6 +9,7 @@ var setContentWithTemplate = function( data, elementId, template ) {
 
 var setContent = function( content, elementId ) {
     var element = document.getElementById( elementId );
+    debug(content)
     if( null === element ) {
         var container = document.getElementById( 'container' )
         element = document.createElement( 'div' );
@@ -57,7 +58,18 @@ var setCss = function( content, id ) {
 }
 
 var remote = require('electron').remote
-var args = remote.getGlobal('cliArgs');
+// get a copy of command line params
+var args =  JSON.parse(JSON.stringify( remote.getGlobal('cliArgs')));
+
+console.log('Parameters :')
+console.log(args);
+
+var DEBUG = ( 1 == args.params.debugmode ) ? true : false;
+function debug( str ) {
+    if( DEBUG ) {
+        console.log( str );
+    }
+}
 
 fs.readFile( args.params.css, 'UTF-8', function( err, data ) {
     if (err) {
@@ -68,13 +80,13 @@ fs.readFile( args.params.css, 'UTF-8', function( err, data ) {
 });
 
 var DBUSCONFIG = args.params.dbus
-var DEBUG = ( 1 == args.params.debug ) ? true : false;
 if( DBUSCONFIG ) {
     mode = 'dbus'
     var CONFIGPATH = require('path').dirname( DBUSCONFIG )
 } else {
     mode = 'stdin'
 }
+
 
 /**
  * Attach a DBUS signal to a template rendering
@@ -83,6 +95,7 @@ if( DBUSCONFIG ) {
  * @returns {null}
  */
 var attachEventToTemplate = function (config) {
+    debug("load template " + config.template + " and attach to event " + config['object'])
     let id = config.id
     var templateFile = resolveFilename(config.template)
     fs.readFile( templateFile, 'UTF-8', function( err, strtemplate ) {
@@ -92,9 +105,7 @@ var attachEventToTemplate = function (config) {
         let template = ejs.compile( strtemplate )
         dbus.attach( config.service, config['object'], function( data ) {
             data = JSON.parse( data )
-            if( DEBUG ) {
-                console.log( data )
-            }
+            debug(data);
             setContentWithTemplate( data, id, template );
         });
     } );
@@ -109,9 +120,7 @@ var attachEventToTemplate = function (config) {
 var attachEventToRendering = function (config) {
     let id = config.id
     dbus.attach( config.service, config['object'], function( data ) {
-        if( DEBUG ) {
-            console.log( data )
-        }
+        debug(data);
         setContent( data, id );
     });
 }
@@ -134,15 +143,20 @@ if( mode == 'dbus' ) {
             }
             for( var i=0; i < configs.length; i++ ) {
                 var config = configs[i]
+                debug( 'Load following configuration :');
+                debug(config);
                 if( config['css-file'] ) {
+                    debug("load css file" + config['css-file'])
                     setCssFromFile( config['css-file'], config.id );
                 }
                 if( config.css ) {
+                    debug("load raw css " + config.css)
                     setCss( config.css, config.id );
                 }
                 if( config.template ) {
                     attachEventToTemplate( config )
                 } else {
+                    debug("no template, the service provide the output ")
                     attachEventToRendering( config )
                 }
             }

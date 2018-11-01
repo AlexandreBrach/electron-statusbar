@@ -3,9 +3,9 @@ var dbus = require('dbus-native');
 
 var sessionBus = dbus.sessionBus();
 
-const SERVICE = 'org.alexandrebrach.toolbar'
-const OBJECT = '/org/alexandrebrach/toolbar/xmonad'
-const INTERFACE = 'org.alexandrebrach.toolbar.xmonad'
+const SERVICE = 'org.alexandrebrach.toolbar.battery'
+const OBJECT = '/org/alexandrebrach/toolbar/battery'
+const INTERFACE = 'org.alexandrebrach.toolbar.battery'
 //const INTERFACE = 'org.freedesktop.NetworkManager.Settings'
 const SIGNALNAME = 'changes'
 

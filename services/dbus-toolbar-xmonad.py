@@ -5,7 +5,7 @@
 import sys
 import dbus
 import dbus.service
-import gobject
+# import gobject
 import os
 
 from subprocess import Popen, PIPE, STDOUT
@@ -172,8 +172,8 @@ class Emitter(dbus.service.Object):
 debogger = Debogger( "/home/alex/dbus_out", False )
 emitter = Emitter( BUS_NAME, OBJECT_PATH )
 
-def job( data, stri ):
-    d = data.readline()
+def job( d ):
+    # d = data.readline()
     debogger.debug( "========================" )
     debogger.debug( d )
     try:
@@ -196,9 +196,13 @@ def error( data, stri):
     debogger.debug( data )
     return True
 
-loop = gobject.MainLoop()
-gobject.io_add_watch(sys.stdin, gobject.IO_IN | gobject.IO_PRI, job)
-gobject.io_add_watch(sys.stdin, gobject.IO_HUP, end)
-gobject.io_add_watch(sys.stdin, gobject.IO_ERR, error)
-gobject.io_add_watch(sys.stdin, gobject.IO_NVAL, job)
-loop.run()
+# loop = gobject.MainLoop()
+# gobject.io_add_watch(sys.stdin, gobject.IO_IN | gobject.IO_PRI, job)
+# gobject.io_add_watch(sys.stdin, gobject.IO_HUP, end)
+# gobject.io_add_watch(sys.stdin, gobject.IO_ERR, error)
+# gobject.io_add_watch(sys.stdin, gobject.IO_NVAL, job)
+# loop.run()
+
+for line in sys.stdin:
+    job(line)
+

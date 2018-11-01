@@ -24,6 +24,7 @@ var getState = function (iface) {
             if( err ) {
                 reject( err );
             } else {
+                console.log(state);
                 resolve( state );
             }
         } );
@@ -41,11 +42,12 @@ var getState = function (iface) {
 var attach = function ( serviceName, objectName, callback ) {
     var service = sessionBus.getService( serviceName );
 
+    console.log('retrieveing interface ' + objectName + '...');
     service.getInterface( objectName, INTERFACE, function( e, iface ) {
         if(e) {
             console.error(e.join('\n'))
         } else {
-            //console.log(iface)
+            console.log(iface)
             //if (e || (iface === undefined )) {
                 //console.error ('Failed to request interface \''
                         //+ INTERFACE + '\' at \'' + objectName )

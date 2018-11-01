@@ -78,7 +78,6 @@ function createWindow () {
         mainWindow.show();
 
         // Open the DevTools.
-        //if( '1' == cliArgs.params.debugmode ) {
         if( debugmode ) {
             console.log("open the chrome console")
             mainWindow.webContents.openDevTools({mode:"detach"})

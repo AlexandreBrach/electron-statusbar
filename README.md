@@ -6,7 +6,7 @@ A web-based desktop status bar created with Electron.
 
 Dbus lib for python
 
-    apt install python-dbus-dev libglib2.0-dev python-gobject
+    apt install python-dbus-dev libglib2.0-dev
 
 # BUILD
 
