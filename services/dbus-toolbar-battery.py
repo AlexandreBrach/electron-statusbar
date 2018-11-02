@@ -1,13 +1,9 @@
 #!/usr/bin/python
 
-# -*- coding: utf-8 -*-
-
 import sys
 import dbus
 import dbus.service
-import time
-
-from multiprocessing import Process
+from gi.repository import GLib
 
 sys.path.append( '.' )
 
@@ -30,7 +26,7 @@ class Emitter(dbus.service.Object):
     @dbus.service.signal(dbus_interface=DBUS_INTERFACE, signature='')
     def changes(self, *data):
         self.data = provider.serializeDevices()
-        print(self.data)
+        print( self.data )
         return True
 
     @dbus.service.method(dbus_interface=DBUS_INTERFACE,
@@ -46,11 +42,7 @@ def run():
     e.changes()
     return True
 
-
-while True:
-    action_process = Process(target=run)
-    action_process.start()
-    action_process.join()
-    action_process.terminate()
-    time.sleep(10)
-
+GLib.timeout_add( 10000, run )
+loop = GLib.MainLoop()
+e.changes()
+loop.run()

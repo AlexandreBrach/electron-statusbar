@@ -4,9 +4,8 @@
 
 import dbus
 import dbus.service
+from gi.repository import GLib
 import time
-
-from multiprocessing import Process
 
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
@@ -43,9 +42,7 @@ def run():
     e.changes()
     return True
 
-while True:
-    action_process = Process(target=run)
-    action_process.start()
-    action_process.join()
-    action_process.terminate()
-    time.sleep(10)
+GLib.timeout_add( 15000, run )
+loop = GLib.MainLoop()
+e.changes()
+loop.run()

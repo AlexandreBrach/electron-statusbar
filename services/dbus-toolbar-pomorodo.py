@@ -4,7 +4,7 @@
 
 import dbus
 import dbus.service
-import gobject
+from gi.repository import GLib
 import time
 
 from dbus.mainloop.glib import DBusGMainLoop
@@ -45,7 +45,7 @@ def run():
     return True
 
 
-gobject.timeout_add(15000, run)
-loop = gobject.MainLoop()
+GLib.timeout_add(15000, run)
+loop = GLib.MainLoop()
 e.changes()
 loop.run()

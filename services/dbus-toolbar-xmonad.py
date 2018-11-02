@@ -1,11 +1,16 @@
 #!/usr/bin/python
 
+
+import sys
+import dbus
+#!/usr/bin/python
+
 # -*- coding: utf-8 -*-
 
 import sys
 import dbus
 import dbus.service
-# import gobject
+from gi.repository import GLib
 import os
 
 from subprocess import Popen, PIPE, STDOUT
@@ -172,8 +177,8 @@ class Emitter(dbus.service.Object):
 debogger = Debogger( "/home/alex/dbus_out", False )
 emitter = Emitter( BUS_NAME, OBJECT_PATH )
 
-def job( d ):
-    # d = data.readline()
+def job( data, stri ):
+    d = data.readline()
     debogger.debug( "========================" )
     debogger.debug( d )
     try:
@@ -196,13 +201,9 @@ def error( data, stri):
     debogger.debug( data )
     return True
 
-# loop = gobject.MainLoop()
-# gobject.io_add_watch(sys.stdin, gobject.IO_IN | gobject.IO_PRI, job)
-# gobject.io_add_watch(sys.stdin, gobject.IO_HUP, end)
-# gobject.io_add_watch(sys.stdin, gobject.IO_ERR, error)
-# gobject.io_add_watch(sys.stdin, gobject.IO_NVAL, job)
-# loop.run()
-
-for line in sys.stdin:
-    job(line)
-
+loop = GLib.MainLoop()
+GLib.io_add_watch(sys.stdin, GLib.IO_IN | GLib.IO_PRI, job)
+GLib.io_add_watch(sys.stdin, GLib.IO_HUP, end)
+GLib.io_add_watch(sys.stdin, GLib.IO_ERR, error)
+GLib.io_add_watch(sys.stdin, GLib.IO_NVAL, job)
+loop.run()

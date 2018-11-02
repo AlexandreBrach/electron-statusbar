@@ -5,14 +5,14 @@
 import sys
 import dbus
 import dbus.service
-import time
-
-from multiprocessing import Process
+from gi.repository import GLib
+from dbus.mainloop.glib import DBusGMainLoop
 
 sys.path.append( '.' )
 
 from DBusProvider.NetworkManager import NetworkManagerService,NetworkInterface
 
+DBusGMainLoop(set_as_default=True)
 BUS_NAME = 'org.alexandrebrach.toolbar.network'
 OBJECT_PATH = '/org/alexandrebrach/toolbar/network'
 DBUS_INTERFACE = 'org.alexandrebrach.toolbar'
@@ -31,7 +31,7 @@ class Emitter(dbus.service.Object):
     def changes(self, *data):
         r = provider.serializeDevices()
         self.data = r
-        print(r)
+        print( r )
         return True
 
     @dbus.service.method(dbus_interface=DBUS_INTERFACE,
@@ -43,17 +43,6 @@ e = Emitter( BUS_NAME, OBJECT_PATH )
 
 provider.onInterfacesChange( e.changes )
 
-def run():
-    e.changes()
-    return True
-
-while True:
-    action_process = Process(target=run)
-    action_process.start()
-    action_process.join()
-    action_process.terminate()
-    time.sleep(10)
-
-# loop = gobject.MainLoop()
-# e.changes()
-# loop.run()
+loop = GLib.MainLoop()
+e.changes()
+loop.run()
