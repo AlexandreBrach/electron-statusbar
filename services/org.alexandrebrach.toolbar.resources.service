@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.alexandrebrach.toolbar.resources
+Exec=/usr/bin/dbus-toolbar-resources.py
+User=root

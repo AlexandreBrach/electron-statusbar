@@ -12,6 +12,12 @@ rm /usr/share/dbus-1/services/org.alexandrebrach.toolbar.battery.service
 ln -s $(pwd)/dbus-toolbar-battery.py /usr/bin/dbus-toolbar-battery.py
 ln -s $(pwd)/org.alexandrebrach.toolbar.battery.service /usr/share/dbus-1/services/org.alexandrebrach.toolbar.battery.service
 
+# Resource toolbar
+rm /usr/bin/dbus-toolbar-resources.py
+rm /usr/share/dbus-1/services/org.alexandrebrach.toolbar.resources.service
+ln -s $(pwd)/dbus-toolbar-resources.py /usr/bin/dbus-toolbar-resources.py
+ln -s $(pwd)/org.alexandrebrach.toolbar.resources.service /usr/share/dbus-1/services/org.alexandrebrach.toolbar.resources.service
+
 # XMONAD toolbar
 
 # the executable file is daemonized by xmonad, nothing to do here

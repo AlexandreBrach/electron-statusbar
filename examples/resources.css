@@ -1,0 +1,33 @@
+#resources {
+    float:left;
+    font-size: 12px;
+    margin: 0px;
+    padding: 0px;
+}
+
+#resources .label {
+    float: left;
+    padding: 0px 3px;
+}
+
+#resources {
+    float: left;
+    margin: 3px 10px;
+}
+
+#resources .jauge {
+    float: left;
+    width: 100px;
+    border: 1px solid white;
+    height: 5px;
+    padding: 3px;
+    background-color: #333333;
+    border-radius: 3px;
+    box-shadow: 2px 2px 2px black;
+}
+
+#resources .jauge div {
+    background-color: yellow;
+    height: 5px;
+}
+

@@ -1,0 +1,14 @@
+<div class="label">
+CPU
+</div>
+<div class="jauge">
+    <div class="left" style="width:<%= data.cpu_idle %>px">
+    </div>
+</div>
+<div class="label">
+&nbsp;RAM
+</div>
+<div class="jauge">
+    <div class="left" style="width:<%= Math.round( data.free / data.total * 100 ) %>px">
+    </div>
+</div>
