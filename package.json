@@ -14,9 +14,9 @@
     "test": "tests"
   },
   "dependencies": {
-    "dbus-native": "^0.2.5",
+    "dbus-native": "latest",
     "ejs": "^2.6.1",
-    "electron": "^3.0.6",
+    "electron": "^3.0.10",
     "electron-connect": "^0.6.3",
     "electron-positioner": "^4.1.0",
     "randomstring": "^1.1.5",
